@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "description": "REACT100 Assignment - VSTDA",
   "main": "server/index.js",
+  "author": "Olivia Reed",
   "scripts": {
     "build": "npm run less && webpack",
     "start": "node server/index.js",
