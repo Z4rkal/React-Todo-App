@@ -57,7 +57,7 @@ describe('Very Simple To Do App', function main() {
       })
       .then(({ innerText, className }) => {
         expect(innerText).to.contain('ITEM');
-        expect(className).to.contain('success');
+        expect(className).to.contain('danger');
       })
   );
 

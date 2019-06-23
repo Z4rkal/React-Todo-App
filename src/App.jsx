@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import axios from 'axios';
 
 function handlePrio(prio) {
   switch (prio) {
@@ -6,6 +7,20 @@ function handlePrio(prio) {
     case '2': return 'warning';
     case '3': return 'success';
     default: return 'info';
+  }
+}
+
+class Control extends Component {
+  render() {
+    return (
+      <div className='panel-footer'>
+        <div className='row'>
+          <div className='col-sm-12'>
+            <input type='checkbox' checked={this.props.sortBox} onChange={() => this.props.update('sort', this.props.sortBox == false ? true : false)} />Sorting by {this.props.sortBox == true ? <span>id</span> : <span>priority</span>}
+          </div>
+        </div>
+      </div>
+    )
   }
 }
 
@@ -17,16 +32,16 @@ class Input extends Component {
           <div className='panel-heading'>Add New Todo</div>
           <div className='panel-body'>
             <label htmlFor='todo-text-in'>I want to...</label>
-            <textarea id='todo-text-in' className='form-control' rows='4' value={this.props.text} onChange={(e) => this.props.update('textIn', e)}></textarea>
+            <textarea id='todo-text-in' className='create-todo-text form-control' rows='4' value={this.props.text} onChange={(e) => this.props.update('textIn', e.target.value)}></textarea>
             <label htmlFor='todo-prio-select' style={{ marginTop: '0.5rem' }}>How much of a priority is this?</label>
-            <select id='todo-prio-select' className='form-control' value={this.props.prio} onChange={(e) => this.props.update('prioIn', e)}>
+            <select id='todo-prio-select' className='create-todo-priority form-control' value={this.props.prio} onChange={(e) => this.props.update('prioIn', e.target.value)}>
               <option value='1'>High Priority</option>
               <option value='2'>Moderate Priority</option>
               <option value='3'>Low Priority</option>
             </select>
           </div>
           <div className='panel-footer'>
-            <button className='btn btn-success btn-block btn-lg' onClick={this.props.add}>Add</button>
+            <button className='create-todo btn btn-success btn-block btn-lg' onClick={this.props.add}>Add</button>
           </div>
         </div>
       </div>
@@ -48,10 +63,10 @@ class TodoItem extends Component {
             <h5>{this.props.el.text}</h5>
           </div>
           <div className='form-group' style={{ marginRight: '1.5rem' }}>
-            <span className='glyphicon glyphicon-edit text-primary' onClick={() => this.props.setEdit(this.props.index)}></span>
+            <span className='edit-todo glyphicon glyphicon-edit text-primary' onClick={() => this.props.setEdit(this.props.index)}></span>
           </div>
           <div className='form-group'>
-            <span className='glyphicon glyphicon-trash text-danger' onClick={() => this.props.remove(this.props.index)}></span>
+            <span className='delete-todo glyphicon glyphicon-trash text-danger' onClick={() => this.props.remove(this.props.index)}></span>
           </div>
         </form>
       </li>
@@ -80,15 +95,15 @@ class EditTodo extends Component {
     return (
       <li className={`list-group-item list-group-item-${handlePrio(this.state.prio)}`}>
         <label htmlFor='editDesc'>Description</label>
-        <textarea value={this.state.text} className='form-control' id='editDesc' rows='4' onChange={(e) => this.updateInput('text', e)}></textarea>
+        <textarea value={this.state.text} className='update-todo-text form-control' id='editDesc' rows='4' onChange={(e) => this.updateInput('text', e).target.value}></textarea>
         <label htmlFor='editPrio' style={{ marginTop: '0.5rem' }}>Priority</label>
-        <select value={this.state.prio} className='form-control' id='editPrio' onChange={(e) => this.updateInput('prio', e)}>
+        <select value={this.state.prio} className='update-todo-priority form-control' id='editPrio' onChange={(e) => this.updateInput('prio', e).target.value}>
           <option value='1'>High Priority</option>
           <option value='2'>Moderate Priority</option>
           <option value='3'>Low Priority</option>
         </select>
-        <div className='btn-group' role='group' style={{marginTop: '0.5rem'}}>
-          <button type='button' className='btn btn-success' onClick={() => this.props.save(true, this.state.text, this.state.prio, this.state.value)}>Save</button>
+        <div className='btn-group' role='group' style={{ marginTop: '0.5rem' }}>
+          <button type='button' className='update-todo btn btn-success' onClick={() => this.props.save(true, this.state.text, this.state.prio, this.state.value)}>Save</button>
           <button type='button' className='btn btn-danger' onClick={() => this.props.save(false)}>Cancel</button>
         </div>
       </li>
@@ -97,43 +112,68 @@ class EditTodo extends Component {
 }
 
 class Output extends Component {
+  renderItems() {
+    return (this.props.todo.map((el, index) => index != this.props.edIn ? (
+      <TodoItem key={el.text + '' + index}
+        el={el}
+        index={index}
+        setEdit={this.props.setEdit}
+        remove={this.props.remove}
+        boxClick={this.props.boxClick}
+      />
+    ) : (
+        <EditTodo key={el.text + '' + index}
+          el={el}
+          index={index}
+          save={this.props.save}
+        />
+      )));
+  }
+
+  renderPriority(priority) {
+    return (this.props.todo.map((el, index) => el.priority == priority ? (index != this.props.edIn ? (
+      <TodoItem key={el.text + '' + index}
+        el={el}
+        index={index}
+        setEdit={this.props.setEdit}
+        remove={this.props.remove}
+        boxClick={this.props.boxClick}
+      />
+    ) : (
+        <EditTodo key={el.text + '' + index}
+          el={el}
+          index={index}
+          save={this.props.save}
+        />
+      )) : null));
+  }
+
   render() {
     return (
       <div className='col-sm-8'>
         <div className='panel panel-default'>
           <div className='panel-heading'>View Todos</div>
           <div className='panel-body'>
-            <ul className='list-group'>
-              {this.props.todo.map((el, index) => index != this.props.edIn ? (
-                <TodoItem key={el.text + '' + index}
-                  el={el}
-                  index={index}
-                  setEdit={this.props.setEdit}
-                  remove={this.props.remove}
-                  boxClick={this.props.boxClick}
-                />
-              ) : (
-                  <EditTodo key={el.text + '' + index}
-                    el={el}
-                    index={index}
-                    save={this.props.save}
-                  />
-                ))}
-            </ul>
+            {this.props.sortBox == true ?
+              (<ul className='list-group'>
+                {this.renderItems()}
+              </ul>) :
+              (<ul className='list-group'>
+                {this.renderPriority(1)}
+                {this.renderPriority(2)}
+                {this.renderPriority(3)}
+              </ul>)
+            }
           </div>
+          <Control
+            sortBox={this.props.sortBox}
+            update={this.props.update}
+          />
         </div>
-      </div>
+      </div >
     )
   }
 }
-
-// class Control extends Component {
-//   render() {
-//     return (
-//       <div></div>
-//     )
-//   }
-// }
 
 class App extends Component {
   constructor() {
@@ -142,6 +182,7 @@ class App extends Component {
       textIn: '',
       prioIn: '3',
       editIndex: -1,
+      sort: true,
       todo: []
     };
 
@@ -153,20 +194,30 @@ class App extends Component {
     this.saveTodo = this.saveTodo.bind(this);
   }
 
-  updateInput(field, event) {
+  componentWillMount() {
+    axios
+      .get('/api/TodoItems/?$')
+      .then(response => response.data)
+      .then(todo => this.setState({ todo }));
+  }
+
+  updateInput(field, value) {
     this.setState({
-      [field]: event.target.value
+      [field]: value
     });
   }
 
   updateCheckbox(index) {
     let toDoList = this.state.todo;
 
-    toDoList.splice(index,1,{text: this.state.todo[index].text, priority: this.state.todo[index].priority, value: this.state.todo[index].value == false ? true : false});
+    let updatedTodo = { id: index, text: this.state.todo[index].text, priority: this.state.todo[index].priority, value: this.state.todo[index].value == false ? true : false }
+    toDoList.splice(index, 1, updatedTodo);
 
     this.setState({
-      todo:toDoList
+      todo: toDoList
     });
+
+    axios.post('/api/TodoItems/?$', updatedTodo);
   }
 
   addTodo() {
@@ -174,11 +225,15 @@ class App extends Component {
     //if (this.state.prioIn == null) return alert('Error, Please select a priority for your new to-do item.');
 
     let todoList = this.state.todo;
-    todoList.push({
+
+    let newTodo = {
+      id: todoList.length,
       priority: this.state.prioIn,
       text: this.state.textIn,
-      value: ''
-    });
+      value: false
+    }
+
+    todoList.push(newTodo);
 
     //Add the new todo item and clear the input fields
     this.setState({
@@ -186,6 +241,8 @@ class App extends Component {
       prioIn: '3',
       todo: todoList
     });
+
+    axios.post('/api/TodoItems/?$', newTodo);
   }
 
   setEditTodo(index) {
@@ -197,11 +254,14 @@ class App extends Component {
   saveTodo(save, text, priority, value) {
     if (save) {
       let todoList = this.state.todo;
-      todoList.splice(this.state.editIndex, 1, { text: text, priority: priority, value: value });
+
+      let updatedTodo = { id: this.state.editIndex, text: text, priority: priority, value: value }
+      todoList.splice(this.state.editIndex, 1, updatedTodo);
 
       this.setState({
         todo: todoList
       });
+      axios.post('/api/TodoItems/?$', updatedTodo);
     }
     this.setState({
       editIndex: -1
@@ -213,17 +273,24 @@ class App extends Component {
 
     todoList.splice(index, 1);
 
+    todoList.forEach((element, index) => {
+      element.id = index;
+    });
+
     this.setState({
       todo: todoList
     });
+    axios.delete(`/api/TodoItems/${index}`);
   }
 
   render() {
     return (
-      <div className='container'>
-        <div className='row'>
-          <h1>Very Simple Todo App</h1>
-          <h5>Track all the things</h5>
+      <div className='container-fluid'>
+        <div className='row' style={{ color: 'white' }}>
+          <div className='col-sm-12'>
+            <h1>Very Simple Todo App</h1>
+            <h5>Track all the things</h5>
+          </div>
         </div>
         <div className='panel'></div>
         <div className='row'>
@@ -240,6 +307,8 @@ class App extends Component {
             save={this.saveTodo}
             remove={this.removeTodo}
             boxClick={this.updateCheckbox}
+            sortBox={this.state.sort}
+            update={this.updateInput}
           />
         </div>
       </div>
