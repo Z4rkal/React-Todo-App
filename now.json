@@ -8,8 +8,8 @@
     ],
     "routes": [
       { "src": "/api/.*", "dest": "/server/index.js" },
-      { "src": "/bundle.js", "dest": "/bundle.js" },
-      { "src": "/css/style.css", "dest": "/css/style.css"},
+      { "src": ".*bundle.js", "dest": "/bundle.js" },
+      { "src": ".*css/style.css", "dest": "/css/style.css"},
       { "src": ".*", "dest": "/public/index.html" }
     ]
   }
