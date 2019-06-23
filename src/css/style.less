@@ -2,13 +2,14 @@
 body {
   background: #136a8a; /* fallback for old browsers */
   //background: -webkit-linear-gradient(to left, #b3e6eb, #6281c9);
-  background-image: linear-gradient(to left, #b3e6eb, #6281c9);
-  background-size: 300%;
-  background-clip: inherit;
+  background-image: linear-gradient(15deg, #ffffff,#f7c8d8, #55cdfc);
+  background-size: 200%;
+  background-origin: initial;
+  min-height: 100vh;
   // -webkit-animation-name: shift; /* Safari 4.0 - 8.0 */
   // -webkit-animation-duration: 4s; /* Safari 4.0 - 8.0 */
   animation-name: shift;
-  animation-duration: 15s;
+  animation-duration: 30s;
   animation-iteration-count: infinite;
 }
 
@@ -21,7 +22,9 @@ body {
 /* Standard syntax */
 @keyframes shift {
 0% {background-position: 0%;}
-50% {background-position: 100%;}
+25% {background-position-y: 50%;}
+50% {background-position-x: 100%; background-position-y: 0%;}
+75% {background-position-y: 100%;}
 100% {background-position: 0%;}
 }
 

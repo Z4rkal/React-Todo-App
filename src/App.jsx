@@ -10,25 +10,11 @@ function handlePrio(prio) {
   }
 }
 
-class Control extends Component {
-  render() {
-    return (
-      <div className='panel-footer'>
-        <div className='row'>
-          <div className='col-sm-12'>
-            <input type='checkbox' checked={this.props.sortBox} onChange={() => this.props.update('sort', this.props.sortBox == false ? true : false)} />Sorting by {this.props.sortBox == true ? <span>id</span> : <span>priority</span>}
-          </div>
-        </div>
-      </div>
-    )
-  }
-}
-
 class Input extends Component {
   render() {
     return (
       <div className='col-sm-4'>
-        <div className='panel panel-default'>
+        <div className='panel panel-default' style={{ position: 'sticky' }}>
           <div className='panel-heading'>Add New Todo</div>
           <div className='panel-body'>
             <label htmlFor='todo-text-in'>I want to...</label>
@@ -48,8 +34,6 @@ class Input extends Component {
     )
   }
 }
-
-
 
 class TodoItem extends Component {
   render() {
@@ -107,6 +91,20 @@ class EditTodo extends Component {
           <button type='button' className='btn btn-danger' onClick={() => this.props.save(false)}>Cancel</button>
         </div>
       </li>
+    )
+  }
+}
+
+class Control extends Component {
+  render() {
+    return (
+      <div className='panel-footer'>
+        <div className='row'>
+          <div className='col-sm-12'>
+            <input type='checkbox' checked={this.props.sortBox} onChange={() => this.props.update('sort', this.props.sortBox == false ? true : false)} />Sorting by {this.props.sortBox == true ? <span>id</span> : <span>priority</span>}
+          </div>
+        </div>
+      </div>
     )
   }
 }
@@ -286,10 +284,10 @@ class App extends Component {
   render() {
     return (
       <div className='container-fluid'>
-        <div className='row' style={{ color: 'white' }}>
+        <div className='row' style={{ color: '#a74858' }}>
           <div className='col-sm-12'>
             <h1>Very Simple Todo App</h1>
-            <h5>Track all the things</h5>
+            <h4>Track all the things</h4>
           </div>
         </div>
         <div className='panel'></div>
