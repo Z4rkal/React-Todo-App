@@ -77,6 +77,16 @@ app.post('/api/TodoItems/?$', (req, res) => {
         toDoArr[toDoArr.length] = newObj
         res.status(201).send(newObj);
     }
+
+    //Added a cap of 50 to the length of the array for the now deploy
+    if(toDoArr.length > 50) {
+    let index = 0;
+    toDoArr.shift;
+    toDoArr.forEach((element) => {
+        element.id = index;
+        index++;
+    } 
+    );}
 });
 
 app.delete('/api/TodoItems/[0-9]+', (req, res) => {
@@ -101,4 +111,5 @@ app.delete('/api/TodoItems/[0-9]+', (req, res) => {
 app.get('*', (req, res) => {
     res.status(404).send('404: Resource not found');
 })
+
 module.exports = app;
