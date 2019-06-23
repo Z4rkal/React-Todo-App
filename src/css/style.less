@@ -1,9 +1,30 @@
 /* You can add global styles to this file, and also import other style files */
 body {
   background: #136a8a; /* fallback for old browsers */
-  background: -webkit-linear-gradient(to left, #b3e6eb, #6281c9);
-  background: linear-gradient(to left, #b3e6eb, #6281c9);
+  //background: -webkit-linear-gradient(to left, #b3e6eb, #6281c9);
+  background-image: linear-gradient(to left, #b3e6eb, #6281c9);
+  background-size: 300%;
+  background-clip: inherit;
+  // -webkit-animation-name: shift; /* Safari 4.0 - 8.0 */
+  // -webkit-animation-duration: 4s; /* Safari 4.0 - 8.0 */
+  animation-name: shift;
+  animation-duration: 15s;
+  animation-iteration-count: infinite;
 }
+
+// /* Safari 4.0 - 8.0 */
+// @-webkit-keyframes shift {
+// from {background-color: red;}
+// to {background-color: yellow;}
+// }
+
+/* Standard syntax */
+@keyframes shift {
+0% {background-position: 0%;}
+50% {background-position: 100%;}
+100% {background-position: 0%;}
+}
+
 
 .no-padding {
   padding: 0 !important;
