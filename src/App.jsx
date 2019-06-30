@@ -79,9 +79,9 @@ class EditTodo extends Component {
     return (
       <li className={`list-group-item list-group-item-${handlePrio(this.state.prio)}`}>
         <label htmlFor='editDesc'>Description</label>
-        <textarea value={this.state.text} className='update-todo-text form-control' id='editDesc' rows='4' onChange={(e) => this.updateInput('text', e).target.value}></textarea>
+        <textarea value={this.state.text} className='update-todo-text form-control' id='editDesc' rows='4' onChange={(e) => this.updateInput('text', e.target.value)}></textarea>
         <label htmlFor='editPrio' style={{ marginTop: '0.5rem' }}>Priority</label>
-        <select value={this.state.prio} className='update-todo-priority form-control' id='editPrio' onChange={(e) => this.updateInput('prio', e).target.value}>
+        <select value={this.state.prio} className='update-todo-priority form-control' id='editPrio' onChange={(e) => this.updateInput('prio', e.target.value)}>
           <option value='1'>High Priority</option>
           <option value='2'>Moderate Priority</option>
           <option value='3'>Low Priority</option>
