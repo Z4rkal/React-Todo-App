@@ -15,7 +15,6 @@
   "dependencies": {
     "axios": "^0.16.1",
     "bluebird": "^3.5.0",
-    "body-parser": "^1.17.1",
     "chai": "^3.5.0",
     "expect": "^1.20.2",
     "express": "^4.16.3",
@@ -35,7 +34,6 @@
     "babel": "^6.3.26",
     "babel-loader": "^7.1.1",
     "babel-preset-airbnb": "^1.0.1",
-    "babel-preset-react": "^6.24.1",
     "babel-register": "^6.4.3",
     "chai-as-promised": "^5.3.0",
     "chai-http": "^4.2.0",
